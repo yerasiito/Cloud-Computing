@@ -1,15 +1,15 @@
 variable "user_name" {
-    description = "The name of the stuser"
+    description = "Your stuser name"
     type = string
 }
 
 variable "user_password" {
-    description = "The password for the stuser"
+    description = "The password from your stuser"
     sensitive = true
 }
 
 variable "ssh_key_pair_name" {
-    description = "The name of the ssh key pair"
+    description = "The name of your ssh key pair"
     type = string
 }
 
