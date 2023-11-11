@@ -17,3 +17,6 @@ Run `terraform plan` to see what terraform will do.
 
 ## 3. Step
 Run `terraform apply` to apply the changes.
+
+## 4. Step
+Run `terraform destroy` to destroy the infrastructure.
