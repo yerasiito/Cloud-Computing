@@ -2,6 +2,8 @@ workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
+image:
+  name: registry.code.fbi.h-da.de/cloud-computing-technology/lab/2023_ws/group_b_8_ci_base_image/base_image:latest
 
 stages:
   - plan
@@ -9,8 +11,8 @@ stages:
   - destroy
 
 before_script:
-  - cd ${CI_PROJECT_DIR}/
-  - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+  - cd ${CI_PROJECT_DIR}
+  - terraform init -upgrade
 
 plan:
   stage: plan
