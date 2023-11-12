@@ -12,7 +12,6 @@ stages:
 plan:
   stage: plan
   script:
-    - terraform validate
     - terraform plan
 
 apply:
