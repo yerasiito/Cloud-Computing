@@ -9,6 +9,7 @@ stages:
   - destroy
 
 before_script:
+  - cd ${CI_PROJECT_DIR}
   - terraform init
 
 plan:
