@@ -1,0 +1,29 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
+stages:
+  - plan
+  - apply
+  - destroy
+
+
+plan:
+  stage: plan
+  script:
+    - terraform validate
+    - terraform plan
+
+apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve
+  allow_failure: true
+  when: manual
+
+destroy:
+  stage: destroy
+  script:
+    - terraform destroy -auto-approve
+  when: manual
