@@ -9,14 +9,8 @@ required_version = ">= 0.14.0"
 }
 
 provider "openstack" {
-  user_name        = var.user_name
-  password         = var.user_password
-  tenant_id        = var.openstack_tenant_id
-  auth_url         = var.openstack_auth_url
-  region           = var.openstack_region_eu_central
-  user_domain_name = var.openstack_user_domain_name
+  cloud = "openstack"
 }
-
 
 resource "openstack_compute_instance_v2" "test-server-tf" {
   name            = "test-server-tf"

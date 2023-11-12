@@ -1,16 +1,7 @@
-variable "user_name" {
-    description = "Your stuser name"
-    type = string
-}
-
-variable "user_password" {
-    description = "The password from your stuser"
-    sensitive = true
-}
-
 variable "ssh_key_pair_name" {
     description = "The name of your ssh key pair"
     type = string
+    default = "Desktop_Bash_HDA"
 }
 
 variable "openstack_auth_url" {
