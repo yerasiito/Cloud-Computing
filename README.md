@@ -7,8 +7,6 @@
 - 5. Grafana + usable data source
 - 6. Application (tbd)
 
-## Creating application credentials
-First you need to create the application credentials and place the `clouds.yaml` file in the `terraform` directory. It needs to be the directory where you initialize terraform. The file should look like the `clouds-example.yaml` but with your credentials.
 
 ## Steps
 ### 1. Step
