@@ -8,6 +8,8 @@ stages:
   - apply
   - destroy
 
+before_script:
+  - terraform init
 
 plan:
   stage: plan
