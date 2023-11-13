@@ -32,8 +32,15 @@ resource "openstack_compute_floatingip_associate_v2" "fip_1" {
   floating_ip = "${openstack_networking_floatingip_v2.fip_1.address}"
   instance_id = "${openstack_compute_instance_v2.test-server-tf.id}"
   fixed_ip    = "${openstack_compute_instance_v2.test-server-tf.network.0.fixed_ip_v4}"
+}
+
+resource "terraform_data" "test-server-tf" {
 
   provisioner "local-exec" {
-    command = "sleep 30;ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${openstack_networking_floatingip_v2.fip_1.address}, -u debian --private-key=${var.local_ssh_key_pair_path} playbook.yml"
+    command = "sleep 20;ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${openstack_networking_floatingip_v2.fip_1.address}, -u debian --private-key=${var.local_ssh_key_pair_path} playbook.yml"
   }
+  depends_on = [
+    openstack_compute_floatingip_associate_v2.fip_1, 
+    openstack_compute_instance_v2.test-server-tf
+    ]
 }
