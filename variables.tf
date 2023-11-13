@@ -1,7 +1,15 @@
 variable "ssh_key_pair_name" {
     description = "The name of your ssh key pair"
     type = string
-    default = "Desktop_Bash_HDA"
+    default = "wsl"
+}
+#!TODO: 
+# Change the path to your local ssh key pair
+# Needs to use an varibale from gitlab
+variable "local_ssh_key_pair_path" {
+    description = "The path to your local ssh key pair"
+    type = string
+    default = "~/.ssh/id_ed25519"
 }
 
 variable "openstack_auth_url" {
