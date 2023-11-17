@@ -1,0 +1,38 @@
+- name: Install needed packages
+  hosts: openstack_instances
+  become: true
+  become_user: root
+  tasks:
+    - name: Update apt repositories
+      ansible.builtin.apt:
+        update_cache: true
+# Install nginx
+    - name: Install nginx
+      ansible.builtin.import_tasks: nginx.yaml
+
+# Install and Configure telegraf
+    - name: Install and configure telegraf
+      ansible.builtin.import_tasks: telegraf.yaml
+
+# Install and Configure influxdb
+    - name: Install and configure influxdb
+      ansible.builtin.import_tasks: influxdb.yaml
+
+# Install and Configure grafana
+    - name: Install and configure grafana
+      ansible.builtin.import_tasks: grafana.yaml
+
+# Start services
+    - name: Start and enable Telegraf service
+      ansible.builtin.systemd:
+        name: telegraf
+        state: started
+        enabled: true
+      # sudo systemctl enable telegraf --now
+
+    - name: Start and enable Grafana service
+      ansible.builtin.systemd:
+        name: grafana-server
+        state: started
+        enabled: true
+      # sudo systemctl enable grafana --now

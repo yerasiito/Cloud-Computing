@@ -1,5 +1,0 @@
-all:
-  hosts:
-    my_hosts:
-      ansible_host: 141.100.234.186
-      ansible_user: debian

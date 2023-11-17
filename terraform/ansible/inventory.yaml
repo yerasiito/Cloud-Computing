@@ -1,0 +1,24 @@
+---
+"all":
+  "children":
+    "aws":
+      "hosts": {}
+      "vars": {}
+    "azr":
+      "hosts": {}
+      "vars": {}
+    "debian":
+      "hosts":
+        "debian":
+          "ansible_host": "141.100.234.109"
+          "ansible_user": "debian"
+      "vars": {}
+    "gcp":
+      "hosts": {}
+      "vars": {}
+    "vsp":
+      "hosts": {}
+      "vars": {}
+  "hosts": {}
+  "vars": {}
+

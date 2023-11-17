@@ -1,9 +1,0 @@
-- name: Install updates and upgrades
-  apt:
-    update_cache: yes
-    upgrade: dist
-        
-- name: Install nginx
-  apt:
-    name: nginx
-    state: latest

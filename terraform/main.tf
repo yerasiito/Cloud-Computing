@@ -42,3 +42,27 @@ resource "local_file" "tf_ansible_vars_file_new" {
   filename = "./tf_ansible_vars_file.yml"
 }
 
+module "ansible_inv" {
+  source  = "mschuchard/ansible-inv/local"
+  version = "~> 1.1.2"
+
+  formats   = ["yaml"]
+  prefix = "ansible/"  # Route of the inventory.yaml
+
+  instances = {
+    "debian" = [
+      {
+        name = "debian"
+        ip   = openstack_networking_floatingip_v2.fip_1.address
+        vars = {
+          ansible_user = "debian"
+          # Add other variables as needed
+        }
+      }
+    ]
+  }
+}
+
+output "instance_ip" {
+  value = openstack_networking_floatingip_v2.fip_1.address
+}

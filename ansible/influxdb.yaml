@@ -1,0 +1,67 @@
+- name: Install dependencies gpg
+  ansible.builtin.apt:
+    name:
+      - gpg
+    state: present
+  # sudo apt-get install -y apt-transport-https
+
+- name: Download InfluxDB GPG key
+  ansible.builtin.get_url:
+    url: https://repos.influxdata.com/influxdata-archive_compat.key
+    dest: /tmp/influxdata-archive_compat.key
+    mode: '0644'
+  changed_when: ""
+
+- name: Verify GPG key fingerprint and import GPG key
+  ansible.builtin.shell: >
+    set -o pipefail &&
+    echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c /tmp/influxdata-archive_compat.key' | sha256sum -c &&
+    cat /tmp/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+  args:
+    executable: /bin/bash
+  changed_when: ""
+
+- name: Add InfluxDB repository to sources.list
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/influxdata.list
+    line: 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main'
+    mode: '0644'
+    create: true
+    insertafter: EOF
+  changed_when: ""
+
+- name: Update apt repositories
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install InfluxDB
+  ansible.builtin.apt:
+    name: influxdb
+    state: present
+
+- name: Start and enable Influxdb service
+  ansible.builtin.systemd:
+    name: influxdb
+    state: started
+  # sudo systemctl enable influxdb --now
+
+# Configure database
+- name: Create InfluxDB database
+  ansible.builtin.command: influx -execute "CREATE DATABASE telegraf"
+  # Comment: Create InfluxDB database named 'telegraf'
+  changed_when: ""
+
+- name: Create retention policy on the database
+  ansible.builtin.command: influx -execute "CREATE RETENTION POLICY ufd ON telegraf DURATION 16w REPLICATION 1"
+  # Comment: Create retention policy on 'telegraf' database
+  changed_when: ""
+
+- name: Create InfluxDB user for Telegraf
+  ansible.builtin.command: influx -execute "CREATE USER telegraf WITH PASSWORD 'telegraf'"
+  # Comment: Create InfluxDB user 'telegraf' with the specified password
+  changed_when: ""
+
+- name: Grant permissions to the user on the database
+  ansible.builtin.command: influx -execute "GRANT ALL ON telegraf TO telegraf"
+  # Comment: Grant all permissions on 'telegraf' database to the user 'telegraf'
+  changed_when: ""

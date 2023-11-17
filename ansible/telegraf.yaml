@@ -1,0 +1,25 @@
+- name: Download Telegraf package
+  ansible.builtin.get_url:
+    url: https://dl.influxdata.com/telegraf/releases/telegraf_1.27.1-1_amd64.deb
+    dest: /tmp/telegraf_1.27.1-1_amd64.deb
+    mode: '0644'
+  # wget https://dl.influxdata.com/telegraf/releases/telegraf_1.27.1-1_amd64.deb
+
+- name: Install Telegraf package
+  ansible.builtin.apt:
+    deb: /tmp/telegraf_1.27.1-1_amd64.deb
+  # dpkg -i telegraf_1.27.1-1_amd64.deb
+
+# Configure telegraf
+- name: Uncomment influxdb plugin
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '.*(\[\[outputs\.influxdb\]\])'
+    replace: '\1'
+
+- name: Uncomment local url
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    after: '\[\[outputs\.influxdb\]\]'
+    regexp: '.*(urls = \[\"http://127.0.0.1:8086\"\])'
+    replace: '\1'
