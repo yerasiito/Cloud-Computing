@@ -1,5 +1,5 @@
 - name: Install needed packages
-  hosts: openstack_instances
+  hosts: all
   become: true
   become_user: root
   tasks:
