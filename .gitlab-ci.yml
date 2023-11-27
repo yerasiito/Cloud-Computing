@@ -13,6 +13,7 @@ default:
 stages:
   - plan
   - apply
+  - ansible
   - destroy
 
 before_script:
@@ -32,6 +33,15 @@ apply:
     - terraform apply -auto-approve
   allow_failure: true
   when: manual
+
+ansible:
+  stage: ansible
+  script:
+    - python3 -m ansible/inventory # generate inventory.yml
+    - ansible-playbook -i inventory ansible/main.yml # run ansible
+  allow_failure: true
+  when: manual
+
 
 destroy:
   stage: destroy
