@@ -1,0 +1,6 @@
+---
+- name: Install nginx
+  hosts: my_hosts  # This should match the group name in your inventory file
+  become: yes
+  roles:
+    - nginx
