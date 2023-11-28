@@ -10,14 +10,15 @@ workflow:
   #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
   image:
-    name: python:3.12.0-bullseye
+    # name: python:3.12.0-bullseye
+    name: alpine:latest
     # entrypoint:
     # - /usr/bin/env
     # - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   before_script:
-    - python -V # Display version for debugging purposes only
+    # - python -V # Display version for debugging purposes only
     - apt-get update -y
-    - apt-get install unzip wget terraform -y
+    - apt-get install python pip terraform -y
     # - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     # - unzip terraform_1.6.4_linux_amd64.zip
     # - mv terraform /bin/bash
