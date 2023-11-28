@@ -56,9 +56,6 @@ apply:
   script:
     - terraform apply -auto-approve
   allow_failure: true
-  artifacts:
-    paths:
-      - terraform/tf_ansible_vars_file.yml
   when: manual
 
 ansible:
@@ -67,10 +64,10 @@ ansible:
     - cd ${CI_PROJECT_DIR}/ansible
     - pip3 install pyyaml
     - python3 inventory.py # generate inventory.yml
-    - |
-      echo "$SSH_PRIVATE_KEY" > ssh_key_file
-      chmod 600 ssh_key_file
-      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory main.yml'
+    - echo "$SSH_PRIVATE_KEY" > ssh_key_file
+    - chmod 600 ssh_key_file
+    #- ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory main.yml'
+    - ansible-playbook -i inventory main.yml --key-file ssh_key_file
   allow_failure: true
   when: manual
 
