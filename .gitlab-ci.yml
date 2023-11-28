@@ -16,18 +16,24 @@ stages:
   - destroy
 
 # before_script:
+#   - cd ${CI_PROJECT_DIR}/terraform
+#   - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
 plan:
   stage: plan
-  script:
+  before_script:
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+  script:
     - terraform fmt
     - terraform validate
     - terraform plan
 
 apply:
   stage: apply
+  before_script:
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform apply -auto-approve
   allow_failure: true
@@ -49,6 +55,9 @@ ansible:
 
 destroy:
   stage: destroy
+  before_script:
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform destroy -auto-approve
   when: manual
