@@ -20,8 +20,8 @@ default:
     - apt-get install unzip wget -y
     - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     - unzip terraform_1.6.4_linux_amd64.zip
-    - mv terraform /usr/bin/bash
-    - export PATH=$PATH:/usr/bin/bash # Add Terraform to the PATH
+    - mv terraform /usr/local/bin/
+    - echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc # Add Terraform to the PATH
     - terraform --version # Display version for debugging purposes only
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
