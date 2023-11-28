@@ -62,8 +62,8 @@ ansible:
   stage: ansible
   script:
     - cd ${CI_PROJECT_DIR}/ansible
-    - pip install pyyaml
-    - python -m inventory # generate inventory.yml
+    - pip3 install pyyaml
+    - python3 -m inventory # generate inventory.yml
     - |
       echo "$SSH_PRIVATE_KEY" > ssh_key_file
       chmod 600 ssh_key_file
