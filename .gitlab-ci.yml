@@ -38,9 +38,9 @@ stages:
 plan:
   stage: plan
   before_script:
-    - export PATH=$PATH:/bin/sh
+    - sudo apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
-    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform fmt
     - terraform validate
@@ -50,8 +50,9 @@ apply:
   stage: apply
   before_script:
     # - export PATH=$PATH:/bin/bash
+    - sudo apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
-    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform apply -auto-approve
   allow_failure: true
@@ -73,8 +74,9 @@ ansible:
 destroy:
   stage: destroy
   before_script:
-    - export PATH=$PATH:/bin/bash
+    - sudo apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform destroy -auto-approve
   when: manual
