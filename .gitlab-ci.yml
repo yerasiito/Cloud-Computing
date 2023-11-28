@@ -38,7 +38,7 @@ stages:
 plan:
   stage: plan
   before_script:
-    - export PATH=$PATH:/usr/local/bin
+    # - export PATH=$PATH:/usr/local/bin
     - cd ${CI_PROJECT_DIR}/terraform
       # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -49,7 +49,7 @@ plan:
 apply:
   stage: apply
   before_script:
-    - export PATH=$PATH:/usr/local/bin
+    # - export PATH=$PATH:/usr/local/bin
     - cd ${CI_PROJECT_DIR}/terraform
     # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
