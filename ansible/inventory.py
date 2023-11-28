@@ -16,7 +16,7 @@ def write_to_inventory(ip_addresses, inventory_path):
             inventory_file.write(f"      ansible_host: {ip}\n")
 
 
-file_path = '/terraform/tf_ansible_vars_file.yml'
+file_path = '../terraform/tf_ansible_vars_file.yml'
 inventory_path = 'inventory.yml'
 
 ip_addresses = get_ip_addresses(file_path)
