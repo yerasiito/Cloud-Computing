@@ -15,13 +15,13 @@ stages:
   - ansible
   - destroy
 
-before_script:
-  - cd ${CI_PROJECT_DIR}/terraform
-  - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+# before_script:
 
 plan:
   stage: plan
   script:
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
     - terraform fmt
     - terraform validate
     - terraform plan
