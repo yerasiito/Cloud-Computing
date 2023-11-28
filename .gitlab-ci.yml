@@ -40,16 +40,16 @@ apply:
   when: manual
 
 ansible:
-  image: python:3.9.17-slim-bullseye
+  image: python:3.12.0-bullseye
   stage: ansible
   script:
     - cd ${CI_PROJECT_DIR}/ansible
+    - pip install pyyaml
     - python -m inventory # generate inventory.yml
-    # - ansible-playbook -i inventory ansible/main.yml # run ansible
     - |
       echo "$SSH_PRIVATE_KEY" > ssh_key_file
       chmod 600 ssh_key_file
-      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory ansible/main.yml'
+      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory main.yml'
   allow_failure: true
   when: manual
 
