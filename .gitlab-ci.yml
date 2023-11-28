@@ -9,7 +9,7 @@ workflow:
   #       - /usr/bin/env
   #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
-  image: 
+  image:
     name: python:latest
     # entrypoint:
     # - /usr/bin/env
@@ -21,8 +21,6 @@ default:
     - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     - unzip terraform_1.6.4_linux_amd64.zip
     - mv terraform /usr/local/bin/
-    - echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc # Add Terraform to the PATH
-    - source ~/.bashrc
     - terraform --version # Display version for debugging purposes only
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
@@ -39,8 +37,9 @@ stages:
 plan:
   stage: plan
   before_script:
+    - export PATH=$PATH:/usr/local/bin
     - cd ${CI_PROJECT_DIR}/terraform
-    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+      # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform fmt
     - terraform validate
@@ -49,6 +48,7 @@ plan:
 apply:
   stage: apply
   before_script:
+    - export PATH=$PATH:/usr/local/bin
     - cd ${CI_PROJECT_DIR}/terraform
     # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
