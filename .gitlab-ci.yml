@@ -64,6 +64,7 @@ apply:
 ansible:
   stage: ansible
   script:
+    - apk add python3 py3-pip openssh ansible --no-cache
     - cd ${CI_PROJECT_DIR}/ansible
     - pip3 install pyyaml
     - python3 inventory.py # generate inventory.yml
