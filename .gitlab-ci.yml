@@ -1,6 +1,6 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == "kpn_tf_ansible"
+    - if: $CI_COMMIT_BRANCH == "main"
 
   # default:
   #   image:
