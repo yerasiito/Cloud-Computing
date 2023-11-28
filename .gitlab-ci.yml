@@ -37,7 +37,7 @@ ansible:
   stage: ansible
   script:
     - cd ${CI_PROJECT_DIR}/ansible
-    - python3 -m ansible/inventory # generate inventory.yml
+    - python -m ansible/inventory # generate inventory.yml
     # - ansible-playbook -i inventory ansible/main.yml # run ansible
     - |
       echo "$SSH_PRIVATE_KEY" > ssh_key_file
