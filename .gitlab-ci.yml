@@ -17,8 +17,9 @@ default:
     - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     - unzip terraform_1.6.4_linux_amd64.zip
     - mv terraform /usr/local/bin/
-    - export PATH=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin  # Add Terraform to the PATH
+    - export PATH=$PATH:/usr/local/bin  # Add Terraform to the PATH
     - terraform --version # Display version for debugging purposes only
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
 stages:
   - plan
@@ -34,7 +35,7 @@ plan:
   stage: plan
   before_script:
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform fmt
     - terraform validate
@@ -44,7 +45,7 @@ apply:
   stage: apply
   before_script:
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform apply -auto-approve
   allow_failure: true
@@ -67,7 +68,7 @@ destroy:
   stage: destroy
   before_script:
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform destroy -auto-approve
   when: manual
