@@ -1,7 +1,3 @@
-# A really big disclaimer
-This branch does not work on the MAIN branch.
-Don't merge it!
-
 ## Terraform changes
 I added this part to the variables, which is necessary for the ansible playbook to work.
 In the future this must be replaced with a gitlab variable (like the ssh key in general)
