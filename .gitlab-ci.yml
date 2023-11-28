@@ -34,6 +34,7 @@ apply:
   when: manual
 
 ansible:
+  image: python:3.9.17-slim-bullseye
   stage: ansible
   script:
     - cd ${CI_PROJECT_DIR}/ansible
