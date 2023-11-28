@@ -1,26 +1,46 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "kpn_tf_ansible"
 
+  # default:
+  #   image:
+  #     name: hashicorp/terraform:latest
+  #     entrypoint:
+  #       - /usr/bin/env
+  #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
   image:
-    name: hashicorp/terraform:latest
-    entrypoint:
-      - /usr/bin/env
-      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-
+    # name: python:3.12.0-bullseye
+    name: alpine:latest
+    # entrypoint:
+    # - /usr/bin/env
+    # - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  before_script:
+    # - python -V # Display version for debugging purposes only
+    - apk add terraform python3 py3-pip openssh --no-cache
+    # - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
+    # - unzip terraform_1.6.4_linux_amd64.zip
+    # - mv terraform /bin/bash
+    # - export PATH=$PATH:/bin/bash
+    - terraform --version # Display version for debugging purposes only
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
 stages:
   - plan
   - apply
+  - ansible
   - destroy
 
-before_script:
-  - cd ${CI_PROJECT_DIR}
-  - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+# before_script:
+#   - cd ${CI_PROJECT_DIR}/terraform
+#   - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
 plan:
   stage: plan
+  before_script:
+    - apk add terraform python3 py3-pip openssh --no-cache
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform fmt
     - terraform validate
@@ -28,13 +48,40 @@ plan:
 
 apply:
   stage: apply
+  before_script:
+    # - export PATH=$PATH:/bin/bash
+    - apk add terraform python3 py3-pip openssh --no-cache
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform apply -auto-approve
+  allow_failure: true
+  artifacts:
+    paths:
+      - terraform/tf_ansible_vars_file.yml
+  when: manual
+
+ansible:
+  stage: ansible
+  script:
+    - apk add python3 py3-pip openssh ansible --no-cache
+    - cd ${CI_PROJECT_DIR}/ansible
+    - pip3 install pyyaml
+    - python3 inventory.py # generate inventory.yml
+    - cat inventory.yml
+    - echo "$SSH_PRIVATE_KEY" > ssh_key_file
+    - chmod 600 ssh_key_file
+    #- ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory main.yml'
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yml main.yml --key-file ssh_key_file
   allow_failure: true
   when: manual
 
 destroy:
   stage: destroy
+  before_script:
+    - apk add terraform python3 py3-pip openssh --no-cache
+    - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform destroy -auto-approve
   when: manual

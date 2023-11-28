@@ -1,7 +1,7 @@
 variable "ssh_key_pair_name" {
     description = "The name of your ssh key pair"
     type = string
-    default = "Desktop_Bash_HDA"
+    default = "gitlab_ci_cd"
 }
 
 variable "openstack_auth_url" {
