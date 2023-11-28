@@ -14,6 +14,7 @@ def write_to_inventory(ip_addresses, inventory_path):
         inventory_file.write("    my_hosts:\n")
         for idx, ip in enumerate(ip_addresses, start=1):
             inventory_file.write(f"      ansible_host: {ip}\n")
+            inventory_file.write(f"      ansible_user: debian\n")
 
 
 file_path = '../terraform/tf_ansible_vars_file.yml'
