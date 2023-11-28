@@ -2,12 +2,22 @@ workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == "kpn_tf_ansible"
 
+  # default:
+  #   image:
+  #     name: hashicorp/terraform:latest
+  #     entrypoint:
+  #       - /usr/bin/env
+  #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
-  image:
-    name: hashicorp/terraform:latest
-    entrypoint:
-      - /usr/bin/env
-      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  image: python:latest
+  before_script:
+    - python -V # Display version for debugging purposes only
+    - apt-get update -y
+    - apt-get install unzip wget -y
+    - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
+    - unzip terraform_1.6.4_linux_amd64.zip
+    - mv terraform /usr/local/bin/
+    - terraform --version # Display version for debugging purposes only
 
 stages:
   - plan
@@ -40,7 +50,6 @@ apply:
   when: manual
 
 ansible:
-  image: python:3.12.0-bullseye
   stage: ansible
   script:
     - cd ${CI_PROJECT_DIR}/ansible
