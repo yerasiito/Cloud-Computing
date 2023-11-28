@@ -17,7 +17,7 @@ default:
     # - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   before_script:
     # - python -V # Display version for debugging purposes only
-    - sudo apk add terraform python pip openssh --no-cache
+    - apk add terraform python pip openssh --no-cache
     # - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     # - unzip terraform_1.6.4_linux_amd64.zip
     # - mv terraform /bin/bash
@@ -38,7 +38,7 @@ stages:
 plan:
   stage: plan
   before_script:
-    - sudo apk add terraform python pip openssh --no-cache
+    - apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -50,7 +50,7 @@ apply:
   stage: apply
   before_script:
     # - export PATH=$PATH:/bin/bash
-    - sudo apk add terraform python pip openssh --no-cache
+    - apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -74,7 +74,7 @@ ansible:
 destroy:
   stage: destroy
   before_script:
-    - sudo apk add terraform python pip openssh --no-cache
+    - apk add terraform python pip openssh --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
