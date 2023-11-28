@@ -1,4 +1,5 @@
 import yaml
+import os
 
 def get_ip_addresses(file_path):
     with open(file_path, 'r') as file:
@@ -14,7 +15,9 @@ def write_to_inventory(ip_addresses, inventory_path):
         for idx, ip in enumerate(ip_addresses, start=1):
             inventory_file.write(f"      ansible_host: {ip}\n")
 
-file_path = '../terraform/tf_ansible_vars_file.yml'
+gitlab_path = os.environ.get('CI_PROJECT_DIR')
+print(gitlab_path)
+file_path = gitlab_path + '/terraform/tf_ansible_vars_file.yml'
 inventory_path = 'inventory.yml'
 
 ip_addresses = get_ip_addresses(file_path)
