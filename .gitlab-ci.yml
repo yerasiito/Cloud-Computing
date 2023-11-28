@@ -10,7 +10,7 @@ workflow:
   #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
   image:
-    name: python:latest
+    name: python:3.12.0-bullseye
     # entrypoint:
     # - /usr/bin/env
     # - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
