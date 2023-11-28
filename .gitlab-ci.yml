@@ -63,11 +63,11 @@ ansible:
   script:
     - cd ${CI_PROJECT_DIR}
     - pip3 install pyyaml
-    - python3 -m ansible/inventory # generate inventory.yml
+    - python3 -m ${CI_PROJECT_DIR}/ansible/inventory # generate inventory.yml
     - |
       echo "$SSH_PRIVATE_KEY" > ssh_key_file
       chmod 600 ssh_key_file
-      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory ansible/main.yml'
+      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory ${CI_PROJECT_DIR}/ansible/main.yml'
   allow_failure: true
   when: manual
 
