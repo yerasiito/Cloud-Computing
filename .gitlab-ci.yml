@@ -1,6 +1,6 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "kpn_tf_ansible"
 
 default:
   image:
@@ -9,7 +9,6 @@ default:
       - /usr/bin/env
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-
 stages:
   - plan
   - apply
@@ -17,7 +16,7 @@ stages:
   - destroy
 
 before_script:
-  - cd ${CI_PROJECT_DIR}
+  - cd ${CI_PROJECT_DIR}/terraform
   - terraform init -upgrade
 
 plan:
@@ -37,11 +36,15 @@ apply:
 ansible:
   stage: ansible
   script:
+    - cd ${CI_PROJECT_DIR}/ansible
     - python3 -m ansible/inventory # generate inventory.yml
-    - ansible-playbook -i inventory ansible/main.yml # run ansible
+    # - ansible-playbook -i inventory ansible/main.yml # run ansible
+    - |
+      echo "$SSH_PRIVATE_KEY" > ssh_key_file
+      chmod 600 ssh_key_file
+      ssh-agent bash -c 'ssh-add ssh_key_file && ansible-playbook -i inventory ansible/main.yml'
   allow_failure: true
   when: manual
-
 
 destroy:
   stage: destroy
