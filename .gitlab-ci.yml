@@ -63,7 +63,7 @@ ansible:
   script:
     - cd ${CI_PROJECT_DIR}
     - pip3 install pyyaml
-    - python3 -m ${CI_PROJECT_DIR}/ansible/inventory.py # generate inventory.yml
+    - python3 -m ${CI_PROJECT_DIR}/ansible/inventory # generate inventory.yml
     - |
       echo "$SSH_PRIVATE_KEY" > ssh_key_file
       chmod 600 ssh_key_file
