@@ -9,7 +9,11 @@ workflow:
   #       - /usr/bin/env
   #       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 default:
-  image: python:latest
+  image: 
+    name: python:latest
+    entrypoint:
+    - /usr/bin/env
+    - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   before_script:
     - python -V # Display version for debugging purposes only
     - apt-get update -y
@@ -17,7 +21,7 @@ default:
     - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     - unzip terraform_1.6.4_linux_amd64.zip
     - mv terraform /usr/local/bin/
-    - export PATH=$PATH:/usr/local/bin  # Add Terraform to the PATH
+    - export PATH=$PATH:/usr/local/bin # Add Terraform to the PATH
     - terraform --version # Display version for debugging purposes only
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
