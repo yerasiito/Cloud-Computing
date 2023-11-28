@@ -56,6 +56,9 @@ apply:
   script:
     - terraform apply -auto-approve
   allow_failure: true
+  artifacts:
+    paths:
+      - terraform/tf_ansible_vars_file.yml
   when: manual
 
 ansible:
