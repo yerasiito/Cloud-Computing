@@ -17,7 +17,7 @@ default:
     # - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   before_script:
     # - python -V # Display version for debugging purposes only
-    - apk add terraform python pip openssh
+    - sudo apk add terraform python pip openssh --no-cache
     # - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
     # - unzip terraform_1.6.4_linux_amd64.zip
     # - mv terraform /bin/bash
