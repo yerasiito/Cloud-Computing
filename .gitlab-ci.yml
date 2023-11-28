@@ -17,11 +17,11 @@ default:
   before_script:
     - python -V # Display version for debugging purposes only
     - apt-get update -y
-    - apt-get install unzip wget terraform -y
-    # - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
-    # - unzip terraform_1.6.4_linux_amd64.zip
-    # - mv terraform /usr/local/bin/
-    #- export PATH=$PATH:/usr/local/bin
+    - apt-get install unzip wget -y
+    - wget https://releases.hashicorp.com/terraform/1.6.4/terraform_1.6.4_linux_amd64.zip
+    - unzip terraform_1.6.4_linux_amd64.zip
+    - mv terraform /bin/bash/
+    - export PATH=$PATH:/bin/bash
     - terraform --version # Display version for debugging purposes only
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
@@ -38,7 +38,7 @@ stages:
 plan:
   stage: plan
   before_script:
-    # - export PATH=$PATH:/usr/local/bin
+    - export PATH=$PATH:/bin/bash
     - cd ${CI_PROJECT_DIR}/terraform
       # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -49,7 +49,7 @@ plan:
 apply:
   stage: apply
   before_script:
-    # - export PATH=$PATH:/usr/local/bin
+    - export PATH=$PATH:/bin/bash
     - cd ${CI_PROJECT_DIR}/terraform
     # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -73,8 +73,8 @@ ansible:
 destroy:
   stage: destroy
   before_script:
+    - export PATH=$PATH:/bin/bash
     - cd ${CI_PROJECT_DIR}/terraform
-    # - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform destroy -auto-approve
   when: manual
