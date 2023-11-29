@@ -49,29 +49,19 @@ cd ansible
 ansible-playbook -i inventory.yaml playbook.yaml --key-file "~/.ssh/gitlab_ci_cd"
 ```
 
-### 5. Step: Open a local tunnel with your machine to be able to access grafana
-```
-# Export the ip
-cd ../terraform # go to main folder to execute terraform
-export TF_VAR_instance_ip=$(terraform output instance_ip | tr -d '"')
-
-# Open local tunel
-ssh -L 9999:localhost:3000 -i /home/$USER/.ssh/gitlab_ci_cd debian@$TF_VAR_instance_ip
-```
-
-### 6. Step: Open grafana in your browser
-Introduce the following url in your browser:
-`http://localhost:9999/`
+### 5. Step: Open grafana in your browser
+Execute `terraform output instance_ip` to see the ip of the instance. Open your browser and enter the ip with port 3000 like this:
+http://intance_ip:3000/login
 
 Enter with:\
 Username: admin\
 Password: admin
 
-### 7. Step: Import desired dashboard
+### 6. Step: Import desired dashboard
 "Dashboard" > "New" > "Import" > Write "1138" and load > select influxDB and import
 
 Now you can monitor your instance:
 ![](dashboard.png)
 
-### Final Step
+### 7. Step
 Run `terraform destroy` to destroy the infrastructure.
