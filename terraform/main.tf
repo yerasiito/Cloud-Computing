@@ -35,19 +35,12 @@ resource "openstack_compute_floatingip_associate_v2" "fip_1" {
   fixed_ip    = "${openstack_compute_instance_v2.test-server-tf.network.0.fixed_ip_v4}"
 }
 
-resource "local_file" "tf_ansible_vars_file_new" {
-  content = <<-DOC
-      tf_floating_ip_1: ${openstack_networking_floatingip_v2.fip_1.address}
-  DOC
-  filename = "./tf_ansible_vars_file.yml"
-}
-
 module "ansible_inv" {
   source  = "mschuchard/ansible-inv/local"
   version = "~> 1.1.2"
 
   formats   = ["yaml"]
-  prefix = "ansible/"  # Route of the inventory.yaml
+  prefix = "../ansible/"  # Route of the inventory.yaml
 
   instances = {
     "debian" = [
