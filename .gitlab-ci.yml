@@ -18,7 +18,7 @@ stages:
 plan:
   stage: plan
   before_script:
-    - apk add terraform --no-cache
+    - apk add terraform git --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
