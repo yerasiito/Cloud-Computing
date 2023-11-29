@@ -52,7 +52,7 @@ ansible:
     - cat inventory.yaml
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
     - chmod 600 ssh_key_file
-    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yml playbook.yaml --key-file ssh_key_file
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml playbook.yaml --key-file ssh_key_file
   allow_failure: true
   when: manual
 
