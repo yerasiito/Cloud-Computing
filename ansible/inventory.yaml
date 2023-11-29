@@ -10,7 +10,7 @@
     "debian":
       "hosts":
         "debian":
-          "ansible_host": "141.100.234.191"
+          "ansible_host": "141.100.234.106"
           "ansible_user": "debian"
       "vars": {}
     "gcp":

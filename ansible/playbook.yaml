@@ -36,3 +36,10 @@
         state: started
         enabled: true
       # sudo systemctl enable grafana --now
+
+    - name: Add sleep command to wait grafana to start
+      command: sleep 3  # Ajusta el tiempo según sea necesario
+
+    - name: Execute the config shell script
+      shell: /tmp/config_grafana.sh
+    # ./config_grafana.sh

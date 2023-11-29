@@ -16,3 +16,20 @@
   ansible.builtin.apt:
     deb: /tmp/grafana_10.2.1_amd64.deb
   # dpkg -i grafana_10.2.1_amd64.deb
+
+    # Config grafana dashboard
+
+- name: Add grafana to bin PATH
+  lineinfile:
+    path: /tmp/script.sh  # Specify the path to your shell script on the remote server
+    line: 'export PATH=$PATH:/usr/share/grafana/bin'
+    create: yes
+# export PATH=$PATH:/usr/share/grafana/bin
+
+- name: Copy shell config script to remote instance
+  copy:
+    src: config_grafana.sh  # Specify the path to your local shell script
+    dest: /tmp  # Specify the destination path on the remote server
+
+- name: Make the config script executable
+  command: chmod +x /tmp/config_grafana.sh
