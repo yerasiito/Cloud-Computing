@@ -45,7 +45,7 @@ ansible:
   script:
     - apk add terraform openssh ansible --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform apply -target="ansible_inv" -auto-approve
+    - terraform apply -target=module.ansible_inv -auto-approve
     - cd ${CI_PROJECT_DIR}/ansible
     - cat inventory.yaml
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
