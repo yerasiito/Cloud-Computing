@@ -7,7 +7,7 @@ default:
     name: alpine:latest
   before_script:
     - apk add terraform git python3 py3-pip openssh --no-cache
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
 
 stages:
   - plan
@@ -20,7 +20,7 @@ plan:
   before_script:
     - apk add terraform git --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform fmt
     - terraform validate
@@ -31,7 +31,7 @@ apply:
   before_script:
     - apk add terraform git --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
-    - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
   script:
     - terraform apply -auto-approve
   allow_failure: true
@@ -42,10 +42,12 @@ apply:
 
 ansible:
   stage: ansible
-  script:
-    - apk add terraform openssh ansible --no-cache
+  before_script:
+    - apk add terraform git openssh ansible --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
+    - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
     - terraform apply -target=module.ansible_inv -auto-approve
+  script:
     - cd ${CI_PROJECT_DIR}/ansible
     - cat inventory.yaml
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
