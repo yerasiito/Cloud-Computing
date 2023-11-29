@@ -6,7 +6,7 @@ default:
   image:
     name: alpine:latest
   before_script:
-    - apk add terraform python3 py3-pip openssh --no-cache
+    - apk add terraform git python3 py3-pip openssh --no-cache
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
 
 stages:
