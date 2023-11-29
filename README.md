@@ -21,8 +21,7 @@ Copy the generated access token and export it with:
 You can add this to your .bashrc or .zshrc
 
 2. Create a ssh key in openstack and save the generated file in ~/.ssh
-Name: cct-b8-keypair (very recommendable)
-if other name is used, modify the default value in 'ssh_key_pair_name' on the file `variables.tf`.
+Name: gitlab_ci_cd (mandatory)
 
 3. Create identity key:
 ```
@@ -31,7 +30,6 @@ Expiration date: empty
 Roles: creator
 ```
 Download the `cloud.yaml` and overwrite it in the cloned repo. `cp ../clouds.yaml terraform/`
-Also modify the default value in 'openstack_tenant_id' on the file `variables.tf` with the project ID.
 
 ## Usage
 
@@ -48,17 +46,17 @@ Run `terraform apply` to apply the changes.
 Run:
 ```
 cd ansible
-ansible-playbook -i inventory.yaml playbook.yaml --key-file "~/.ssh/cct-b8-keypair"
+ansible-playbook -i inventory.yaml playbook.yaml --key-file "~/.ssh/gitlab_ci_cd"
 ```
 
 ### 5. Step: Open a local tunnel with your machine to be able to access grafana
 ```
 # Export the ip
-cd .. # go to main folder to execute terraform
+cd ../terraform # go to main folder to execute terraform
 export TF_VAR_instance_ip=$(terraform output instance_ip | tr -d '"')
 
 # Open local tunel
-ssh -L 9999:localhost:3000 -i /home/$USER/.ssh/cct-b8-keypair debian@$TF_VAR_instance_ip
+ssh -L 9999:localhost:3000 -i /home/$USER/.ssh/gitlab_ci_cd debian@$TF_VAR_instance_ip
 ```
 
 ### 6. Step: Open grafana in your browser
