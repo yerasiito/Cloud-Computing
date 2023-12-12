@@ -4,7 +4,7 @@ workflow:
 
 default:
   image:
-    name: alpine:latest
+    name: alpine:3.18
   before_script:
     - apk add terraform git python3 py3-pip openssh --no-cache
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
