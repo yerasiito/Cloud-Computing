@@ -17,7 +17,7 @@ Role: Maintainer
 Scopes: mark all boxes
 ```
 Copy the generated access token and export it with:
-`export GITLAB_TOKEN="your_token"`
+`export GITLAB_CI_TOKEN="your_token"`
 You can add this to your .bashrc or .zshrc
 
 2. Create a ssh key in openstack and save the generated file in ~/.ssh
@@ -34,7 +34,12 @@ Download the `cloud.yaml` and overwrite it in the cloned repo. `cp ../clouds.yam
 ## Usage
 
 ### 1. Step
-Run `terraform init -backend-config="password=$GITLAB_CI_TOKEN"` to initialize the terraform modules.
+Go to terraform directory or/and run:
+```
+cd terraform
+terraform init -backend-config="password=$GITLAB_CI_TOKEN"
+```
+to initialize the terraform modules.
 
 ### 2. Step
 Run `terraform plan` to see what terraform will do.
@@ -43,15 +48,15 @@ Run `terraform plan` to see what terraform will do.
 Run `terraform apply` to apply the changes.
 
 ### 4. Step: Run ansible to install and configure the needed monitoring packages
-Run:
+Go to ansible directory or/and run:
 ```
-cd ansible
+cd ../ansible
 ansible-playbook -i inventory.yaml playbook.yaml --key-file "~/.ssh/gitlab_ci_cd"
 ```
 
 ### 5. Step: Open grafana in your browser
-Execute `terraform output instance_ip` to see the ip of the instance. Open your browser and enter the ip with port 3000 like this:
-http://intance_ip:3000/login
+Execute `terraform output instance_ip` to see the ip of the instance. Open your browser and enter the ip with port 3000 like this:\
+http://instance_ip:3000/login
 
 Enter with:\
 Username: admin\
