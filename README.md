@@ -47,16 +47,26 @@ Run `terraform plan` to see what terraform will do.
 ### 3. Step
 Run `terraform apply` to apply the changes.
 
-### 4. Step: Run ansible to install and configure the needed monitoring packages
+### 4. Step
+Export the host fixed ip variable, we need it to send the metrics to host later:
+```
+export TF_VAR_fixed_ip=$(terraform output host_fixed_ip)
+```
+
+### 5. Step: Run ansible to install and configure the needed monitoring packages
 Go to ansible directory or/and run:
 ```
 cd ../ansible
-ansible-playbook -i inventory.yaml playbook.yaml --key-file "~/.ssh/gitlab_ci_cd"
+# Configure host machine
+ansible-playbook -i inventory.yaml host.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd"
+
+# Configure guest machine
+ansible-playbook -i inventory.yaml guest1.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd"
 ```
 
-### 5. Step: Open grafana in your browser
-Execute `terraform output instance_ip` to see the ip of the instance. Open your browser and enter the ip with port 3000 like this:\
-http://instance_ip:3000/login
+### 6. Step: Open grafana in your browser
+Execute `terraform output host_ip` to see the ip of the host. Open your browser and enter the ip with port 3000 like this:\
+http://host_ip:3000/login
 
 Enter with:\
 Username: admin\
@@ -65,8 +75,10 @@ Password: admin
 ### 6. Step: Import desired dashboard
 "Dashboard" > "New" > "Import" > Write "1138" and load > select influxDB and import
 
-Now you can monitor your instance:
-![](dashboard.png)
+Now you can monitor your host:
+![](host.png)
+And your guest machine:
+![](guest1.png)
 
 ### 7. Step
 Run `terraform destroy` to destroy the infrastructure.

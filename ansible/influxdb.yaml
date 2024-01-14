@@ -10,7 +10,7 @@
     url: https://repos.influxdata.com/influxdata-archive_compat.key
     dest: /tmp/influxdata-archive_compat.key
     mode: '0644'
-  changed_when: ""
+  changed_when: False
 
 - name: Verify GPG key fingerprint and import GPG key
   ansible.builtin.shell: >
@@ -19,7 +19,7 @@
     cat /tmp/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
   args:
     executable: /bin/bash
-  changed_when: ""
+  changed_when: False
 
 - name: Add InfluxDB repository to sources.list
   ansible.builtin.lineinfile:
@@ -28,7 +28,7 @@
     mode: '0644'
     create: true
     insertafter: EOF
-  changed_when: ""
+  changed_when: False
 
 - name: Update apt repositories
   ansible.builtin.apt:
@@ -49,19 +49,19 @@
 - name: Create InfluxDB database
   ansible.builtin.command: influx -execute "CREATE DATABASE telegraf"
   # Comment: Create InfluxDB database named 'telegraf'
-  changed_when: ""
+  changed_when: False
 
 - name: Create retention policy on the database
   ansible.builtin.command: influx -execute "CREATE RETENTION POLICY ufd ON telegraf DURATION 16w REPLICATION 1"
   # Comment: Create retention policy on 'telegraf' database
-  changed_when: ""
+  changed_when: False
 
 - name: Create InfluxDB user for Telegraf
   ansible.builtin.command: influx -execute "CREATE USER telegraf WITH PASSWORD 'telegraf'"
   # Comment: Create InfluxDB user 'telegraf' with the specified password
-  changed_when: ""
+  changed_when: False
 
 - name: Grant permissions to the user on the database
   ansible.builtin.command: influx -execute "GRANT ALL ON telegraf TO telegraf"
   # Comment: Grant all permissions on 'telegraf' database to the user 'telegraf'
-  changed_when: ""
+  changed_when: False

@@ -21,5 +21,6 @@
   ansible.builtin.replace:
     path: /etc/telegraf/telegraf.conf
     after: '\[\[outputs\.influxdb\]\]'
-    regexp: '.*(urls = \[\"http://127.0.0.1:8086\"\])'
-    replace: '\1'
+    regexp: '.*(urls = \[\"http://)[0-9.]+(:8086\"\])'
+    replace: '\g<1>{{fixed_ip}}\2'
+

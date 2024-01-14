@@ -1,5 +1,5 @@
 - name: Install needed packages
-  hosts: all
+  hosts: host
   become: true
   become_user: root
   tasks:
@@ -37,9 +37,14 @@
         enabled: true
       # sudo systemctl enable grafana --now
 
-    - name: Add sleep command to wait grafana to start
+    - name: Sleep command to wait grafana to start
       command: sleep 10  # Adjust the time
 
     - name: Execute the config shell script
       shell: /tmp/config_grafana.sh
+      register: script_output
     # ./config_grafana.sh
+
+    - name: Display the grafana config output
+      ansible.builtin.debug:
+        var: script_output.stdout_lines

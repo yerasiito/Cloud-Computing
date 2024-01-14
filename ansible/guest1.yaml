@@ -1,0 +1,19 @@
+- name: Install needed packages
+  hosts: guest1
+  become: true
+  become_user: root
+  tasks:
+    - name: Update apt repositories
+      ansible.builtin.apt:
+        update_cache: true
+# Install and Configure telegraf
+    - name: Install and configure telegraf
+      ansible.builtin.import_tasks: telegraf.yaml
+
+# Start services
+    - name: Start and enable Telegraf service
+      ansible.builtin.systemd:
+        name: telegraf
+        state: started
+        enabled: true
+      # sudo systemctl enable telegraf --now

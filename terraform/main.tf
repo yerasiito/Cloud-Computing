@@ -13,9 +13,11 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_grafana" {
   security_group_id = openstack_networking_secgroup_v2.secgroup_grafana.id
 }
 
-resource "openstack_compute_instance_v2" "test-server-tf" {
-  name            = "test-server-tf"
-  image_id        = var.openstack_image_id_debian 
+### Create instances
+
+resource "openstack_compute_instance_v2" "host" {
+  name            = "host"
+  image_id        = var.openstack_image_id_debian
   flavor_id       = var.openstack_flavor_id_m1_small
   key_pair        = var.ssh_key_pair_name
   security_groups = ["default","allow-ssh","allow-http","secgroup_grafana"]
@@ -25,37 +27,66 @@ resource "openstack_compute_instance_v2" "test-server-tf" {
   }
 }
 
-resource "openstack_networking_floatingip_v2" "fip_1" {
-  pool = "public-2"
-}
+resource "openstack_compute_instance_v2" "guest1" {
+  name            = "guest1"
+  image_id        = var.openstack_image_id_debian
+  flavor_id       = var.openstack_flavor_id_m1_small
+  key_pair        = var.ssh_key_pair_name
+  security_groups = ["default","allow-ssh","allow-http"]
 
-resource "openstack_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${openstack_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${openstack_compute_instance_v2.test-server-tf.id}"
-  fixed_ip    = "${openstack_compute_instance_v2.test-server-tf.network.0.fixed_ip_v4}"
-}
-
-module "ansible_inv" {
-  source  = "mschuchard/ansible-inv/local"
-  version = "~> 1.1.2"
-
-  formats   = ["yaml"]
-  prefix = "../ansible/"  # Route of the inventory.yaml
-
-  instances = {
-    "debian" = [
-      {
-        name = "debian"
-        ip   = openstack_networking_floatingip_v2.fip_1.address
-        vars = {
-          ansible_user = "debian"
-          # Add other variables as needed
-        }
-      }
-    ]
+  network {
+    name = var.openstack_network_name
   }
 }
 
-output "instance_ip" {
-  value = openstack_networking_floatingip_v2.fip_1.address
+### pools ###
+
+resource "openstack_networking_floatingip_v2" "fip_host" {
+  pool = "public-2"
+}
+
+resource "openstack_networking_floatingip_v2" "fip_guest1" {
+  pool = "public-2"
+}
+
+### IPs association  ###
+
+resource "openstack_compute_floatingip_associate_v2" "fip_host" {
+  floating_ip = "${openstack_networking_floatingip_v2.fip_host.address}"
+  instance_id = "${openstack_compute_instance_v2.host.id}"
+  fixed_ip    = "${openstack_compute_instance_v2.host.network.0.fixed_ip_v4}"
+}
+
+resource "openstack_compute_floatingip_associate_v2" "fip_guest1" {
+  floating_ip = "${openstack_networking_floatingip_v2.fip_guest1.address}"
+  instance_id = "${openstack_compute_instance_v2.guest1.id}"
+  fixed_ip    = "${openstack_compute_instance_v2.guest1.network.0.fixed_ip_v4}"
+}
+
+### Inventory file ###
+
+resource "local_file" "ansible_inventory" {
+  content  = <<-EOT
+    all:
+      hosts:
+        host:
+          ansible_host: ${openstack_networking_floatingip_v2.fip_host.address}
+        guest1:
+          ansible_host: ${openstack_networking_floatingip_v2.fip_guest1.address}
+    EOT
+  filename = "../ansible/inventory.yaml"
+}
+
+### Outputs ###
+
+output "guest1_ip" {
+  value = openstack_networking_floatingip_v2.fip_guest1.address
+}
+
+output "host_fixed_ip" {
+  value = openstack_compute_instance_v2.host.network.0.fixed_ip_v4
+}
+
+output "host_ip" {
+  value = openstack_networking_floatingip_v2.fip_host.address
 }
