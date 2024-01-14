@@ -34,38 +34,44 @@ Download the `cloud.yaml` and overwrite it in the cloned repo. `cp ../clouds.yam
 ## Usage
 
 ### 1. Step
-Go to terraform directory or/and run:
+Initialize terraform modules:
 ```
-cd terraform
-terraform init -backend-config="password=$GITLAB_CI_TOKEN"
+(cd terraform && 
+terraform init -backend-config="password=$GITLAB_CI_TOKEN")
 ```
-to initialize the terraform modules.
 
 ### 2. Step
-Run `terraform plan` to see what terraform will do.
+To see what terraform will do execute:
+```(cd terraform && 
+   terraform plan)
+```
 
 ### 3. Step
-Run `terraform apply` to apply the changes.
+To apply the changes execute:
+```(cd terraform && 
+   terraform apply)
+```
 
 ### 4. Step
 Export the host fixed ip variable, we need it to send the metrics to host later:
 ```
-export TF_VAR_fixed_ip=$(terraform output host_fixed_ip)
+(cd terraform && 
+export TF_VAR_fixed_ip=$(terraform output host_fixed_ip))
 ```
 
-### 5. Step: Run ansible to install and configure the needed monitoring packages
-Go to ansible directory or/and run:
+### 5. Step
+Run ansible to install and configure the needed monitoring packages:
 ```
-cd ../ansible
+(cd ansible &&
 # Configure host machine
 ansible-playbook -i inventory.yaml host.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd"
 
 # Configure guest machine
-ansible-playbook -i inventory.yaml guest1.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd"
+ansible-playbook -i inventory.yaml guest1.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd")
 ```
 
 ### 6. Step: Open grafana in your browser
-Execute `terraform output host_ip` to see the ip of the host. Open your browser and enter the ip with port 3000 like this:\
+Execute ```(cd terraform && terraform output host_ip)``` to see the ip of the host. Open your browser and enter the ip with port 3000 like this:\
 http://host_ip:3000/login
 
 Enter with:\
@@ -81,4 +87,7 @@ And your guest machine:
 ![](guest1.png)
 
 ### 7. Step
-Run `terraform destroy` to destroy the infrastructure.
+To destroy the infrastructure execute:
+```cd terraform &&
+   terraform destroy
+```
