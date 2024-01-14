@@ -42,21 +42,24 @@ terraform init -backend-config="password=$GITLAB_CI_TOKEN")
 
 ### 2. Step
 To see what terraform will do execute:
-```(cd terraform && 
-   terraform plan)
+```
+(cd terraform && 
+terraform plan)
 ```
 
 ### 3. Step
 To apply the changes execute:
-```(cd terraform && 
-   terraform apply)
+```
+(cd terraform && 
+terraform apply)
 ```
 
 ### 4. Step
 Export the host fixed ip variable, we need it to send the metrics to host later:
 ```
-(cd terraform && 
-export TF_VAR_fixed_ip=$(terraform output host_fixed_ip))
+cd terraform
+export TF_VAR_fixed_ip=$(terraform output host_fixed_ip)
+cd ..
 ```
 
 ### 5. Step
@@ -88,6 +91,7 @@ And your guest machine:
 
 ### 7. Step
 To destroy the infrastructure execute:
-```cd terraform &&
-   terraform destroy
+```
+(cd terraform &&
+terraform destroy)
 ```
