@@ -58,7 +58,7 @@ terraform apply)
 Export the host fixed ip variable, we need it to send the metrics to host later:
 ```
 cd terraform
-export TF_VAR_fixed_ip=$(terraform output host_fixed_ip)
+export TF_VAR_fixed_ip=$(terraform output -raw host_fixed_ip)
 cd ..
 ```
 
@@ -67,10 +67,10 @@ Run ansible to install and configure the needed monitoring packages:
 ```
 (cd ansible &&
 # Configure host machine
-ansible-playbook -i inventory.yaml host.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd"
+ansible-playbook -i inventory.yaml host.yaml --key-file "~/.ssh/gitlab_ci_cd"
 
 # Configure guest machine
-ansible-playbook -i inventory.yaml guest1.yaml -e "fixed_ip=${TF_VAR_fixed_ip}" --key-file "~/.ssh/gitlab_ci_cd")
+ansible-playbook -i inventory.yaml guests.yaml --key-file "~/.ssh/gitlab_ci_cd")
 ```
 
 ### 6. Step: Open grafana in your browser

@@ -22,5 +22,4 @@
     path: /etc/telegraf/telegraf.conf
     after: '\[\[outputs\.influxdb\]\]'
     regexp: '.*(urls = \[\"http://)[0-9.]+(:8086\"\])'
-    replace: '\g<1>{{fixed_ip}}\2'
-
+    replace: '\g<1>{{ lookup("env", "TF_VAR_fixed_ip") }}\2'

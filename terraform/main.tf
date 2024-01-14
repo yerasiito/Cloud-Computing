@@ -39,6 +39,18 @@ resource "openstack_compute_instance_v2" "guest1" {
   }
 }
 
+resource "openstack_compute_instance_v2" "guest2" {
+  name            = "guest2"
+  image_id        = var.openstack_image_id_debian
+  flavor_id       = var.openstack_flavor_id_m1_small
+  key_pair        = var.ssh_key_pair_name
+  security_groups = ["default","allow-ssh","allow-http"]
+
+  network {
+    name = var.openstack_network_name
+  }
+}
+
 ### pools ###
 
 resource "openstack_networking_floatingip_v2" "fip_host" {
@@ -46,6 +58,10 @@ resource "openstack_networking_floatingip_v2" "fip_host" {
 }
 
 resource "openstack_networking_floatingip_v2" "fip_guest1" {
+  pool = "public-2"
+}
+
+resource "openstack_networking_floatingip_v2" "fip_guest2" {
   pool = "public-2"
 }
 
@@ -63,6 +79,12 @@ resource "openstack_compute_floatingip_associate_v2" "fip_guest1" {
   fixed_ip    = "${openstack_compute_instance_v2.guest1.network.0.fixed_ip_v4}"
 }
 
+resource "openstack_compute_floatingip_associate_v2" "fip_guest2" {
+  floating_ip = "${openstack_networking_floatingip_v2.fip_guest2.address}"
+  instance_id = "${openstack_compute_instance_v2.guest2.id}"
+  fixed_ip    = "${openstack_compute_instance_v2.guest2.network.0.fixed_ip_v4}"
+}
+
 ### Inventory file ###
 
 resource "local_file" "ansible_inventory" {
@@ -70,9 +92,14 @@ resource "local_file" "ansible_inventory" {
     all:
       hosts:
         host:
-          ansible_host: ${openstack_networking_floatingip_v2.fip_host.address}
-        guest1:
-          ansible_host: ${openstack_networking_floatingip_v2.fip_guest1.address}
+          ansible_host: ${openstack_networking_floatingip_v2.fip_host.address}  
+      children:
+          guests:
+            hosts:
+              guest1:
+                ansible_host: ${openstack_networking_floatingip_v2.fip_guest1.address}
+              guest2:
+                ansible_host: ${openstack_networking_floatingip_v2.fip_guest2.address}
     EOT
   filename = "../ansible/inventory.yaml"
 }
@@ -81,6 +108,10 @@ resource "local_file" "ansible_inventory" {
 
 output "guest1_ip" {
   value = openstack_networking_floatingip_v2.fip_guest1.address
+}
+
+output "guest2_ip" {
+  value = openstack_networking_floatingip_v2.fip_guest2.address
 }
 
 output "host_fixed_ip" {
