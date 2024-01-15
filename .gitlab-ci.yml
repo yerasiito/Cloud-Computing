@@ -50,7 +50,8 @@ ansible:
   script:
     - cd ${CI_PROJECT_DIR}/terraform
     - export TF_VAR_fixed_ip=$(terraform output -raw host_fixed_ip)
-    - cd ${CI_PROJECT_DIR}/ansible
+    - cd ../${CI_PROJECT_DIR}/ansible
+    - ls
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
     - chmod 600 ssh_key_file
     - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml host.yaml --key-file ssh_key_file
