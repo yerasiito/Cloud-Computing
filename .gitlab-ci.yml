@@ -46,7 +46,7 @@ ansible:
     - apk add terraform openssh ansible --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
-    - terraform apply -target=module.ansible_inv -auto-approve
+    - terraform apply -target=module.ansible_inventory -auto-approve
   script:
     - cd ${CI_PROJECT_DIR}/terraform
     - export TF_VAR_fixed_ip=$(terraform output -raw host_fixed_ip)
