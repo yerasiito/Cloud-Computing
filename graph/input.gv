@@ -1,0 +1,88 @@
+digraph MyGraph {
+
+  Browser [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/firefox.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>Browser</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  Grafana [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/grafana.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>Grafana</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  InfluxDB [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/influxdb.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>InfluxDB</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  Telegraf_host [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/telegraf.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>Telegraf</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  Telegraf_guest1 [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/telegraf.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>Telegraf</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  Telegraf_guest2 [shape=none, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+      <TR>
+        <TD><IMG SRC="icons/telegraf.png" SCALE="TRUE"/></TD>
+      </TR>
+      <TR>
+        <TD>Telegraf</TD>
+      </TR>
+    </TABLE>
+  >];
+
+  subgraph cluster_host {
+    label="host"
+    
+    Browser -> Grafana [label="shows \ndash-\n boards \nfrom"]
+    Grafana -> InfluxDB [label="reads \n data \n from"]
+    Telegraf_host -> InfluxDB [xlabel="writes\n data\n to"]
+  }
+  
+  subgraph cluster_guest1 { 
+    label="guest1"
+
+    Telegraf_guest1 -> InfluxDB [label="sends \ndata to"]
+  }
+  
+  subgraph cluster_guest2 { 
+    label="guest2"
+
+    Telegraf_guest2 -> InfluxDB [label="sends \ndata to"]
+  }
+}
