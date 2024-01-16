@@ -6,7 +6,7 @@ default:
   image:
     name: alpine:3.18
   before_script:
-    - apk add terraform git python3 py3-pip openssh --no-cache
+    - apk add terraform python3 py3-pip openssh --no-cache
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
 
 stages:
@@ -18,7 +18,7 @@ stages:
 plan:
   stage: plan
   before_script:
-    - apk add terraform git --no-cache
+    - apk add terraform --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -29,7 +29,7 @@ plan:
 apply:
   stage: apply
   before_script:
-    - apk add terraform git --no-cache
+    - apk add terraform --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
   script:
@@ -43,23 +43,26 @@ apply:
 ansible:
   stage: ansible
   before_script:
-    - apk add terraform git openssh ansible --no-cache
+    - apk add terraform openssh ansible --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -backend-config="password=${CI_JOB_TOKEN}"
-    - terraform apply -target=module.ansible_inv -auto-approve
+    - terraform apply -target=local_file.ansible_inventory -auto-approve
   script:
+    - cd ${CI_PROJECT_DIR}/terraform
+    - export ANSIBLE_CONFIG=${CI_PROJECT_DIR}/ansible/ansible.cfg
+    - export TF_VAR_fixed_ip=$(terraform output -raw host_fixed_ip)
     - cd ${CI_PROJECT_DIR}/ansible
-    - cat inventory.yaml
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
     - chmod 600 ssh_key_file
-    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml playbook.yaml --key-file ssh_key_file
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml host.yaml --key-file ssh_key_file
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml guests.yaml --key-file ssh_key_file
   allow_failure: true
   when: manual
 
 destroy:
   stage: destroy
   before_script:
-    - apk add terraform git --no-cache
+    - apk add terraform --no-cache
     - cd ${CI_PROJECT_DIR}/terraform
     - terraform init -upgrade -reconfigure -backend-config="password=${CI_JOB_TOKEN}"
   script:
