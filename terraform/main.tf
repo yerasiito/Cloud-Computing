@@ -27,8 +27,8 @@ resource "openstack_compute_instance_v2" "host" {
   }
 }
 
-resource "openstack_compute_instance_v2" "guest1" {
-  name            = "guest1"
+resource "openstack_compute_instance_v2" "client1" {
+  name            = "client1"
   image_id        = var.openstack_image_id_debian
   flavor_id       = var.openstack_flavor_id_m1_small
   key_pair        = var.ssh_key_pair_name
@@ -39,8 +39,8 @@ resource "openstack_compute_instance_v2" "guest1" {
   }
 }
 
-resource "openstack_compute_instance_v2" "guest2" {
-  name            = "guest2"
+resource "openstack_compute_instance_v2" "client2" {
+  name            = "client2"
   image_id        = var.openstack_image_id_debian
   flavor_id       = var.openstack_flavor_id_m1_small
   key_pair        = var.ssh_key_pair_name
@@ -57,11 +57,11 @@ resource "openstack_networking_floatingip_v2" "fip_host" {
   pool = "public-2"
 }
 
-resource "openstack_networking_floatingip_v2" "fip_guest1" {
+resource "openstack_networking_floatingip_v2" "fip_client1" {
   pool = "public-2"
 }
 
-resource "openstack_networking_floatingip_v2" "fip_guest2" {
+resource "openstack_networking_floatingip_v2" "fip_client2" {
   pool = "public-2"
 }
 
@@ -73,16 +73,16 @@ resource "openstack_compute_floatingip_associate_v2" "fip_host" {
   fixed_ip    = "${openstack_compute_instance_v2.host.network.0.fixed_ip_v4}"
 }
 
-resource "openstack_compute_floatingip_associate_v2" "fip_guest1" {
-  floating_ip = "${openstack_networking_floatingip_v2.fip_guest1.address}"
-  instance_id = "${openstack_compute_instance_v2.guest1.id}"
-  fixed_ip    = "${openstack_compute_instance_v2.guest1.network.0.fixed_ip_v4}"
+resource "openstack_compute_floatingip_associate_v2" "fip_client1" {
+  floating_ip = "${openstack_networking_floatingip_v2.fip_client1.address}"
+  instance_id = "${openstack_compute_instance_v2.client1.id}"
+  fixed_ip    = "${openstack_compute_instance_v2.client1.network.0.fixed_ip_v4}"
 }
 
-resource "openstack_compute_floatingip_associate_v2" "fip_guest2" {
-  floating_ip = "${openstack_networking_floatingip_v2.fip_guest2.address}"
-  instance_id = "${openstack_compute_instance_v2.guest2.id}"
-  fixed_ip    = "${openstack_compute_instance_v2.guest2.network.0.fixed_ip_v4}"
+resource "openstack_compute_floatingip_associate_v2" "fip_client2" {
+  floating_ip = "${openstack_networking_floatingip_v2.fip_client2.address}"
+  instance_id = "${openstack_compute_instance_v2.client2.id}"
+  fixed_ip    = "${openstack_compute_instance_v2.client2.network.0.fixed_ip_v4}"
 }
 
 ### Inventory file ###
@@ -92,26 +92,26 @@ resource "local_file" "ansible_inventory" {
     all:
       hosts:
         host:
-          ansible_host: ${openstack_networking_floatingip_v2.fip_host.address}  
+          ansible_host: ${openstack_networking_floatingip_v2.fip_host.address}
       children:
-          guests:
+          clients:
             hosts:
-              guest1:
-                ansible_host: ${openstack_networking_floatingip_v2.fip_guest1.address}
-              guest2:
-                ansible_host: ${openstack_networking_floatingip_v2.fip_guest2.address}
+              client1:
+                ansible_host: ${openstack_networking_floatingip_v2.fip_client1.address}
+              client2:
+                ansible_host: ${openstack_networking_floatingip_v2.fip_client2.address}
     EOT
   filename = "../ansible/inventory.yaml"
 }
 
 ### Outputs ###
 
-output "guest1_ip" {
-  value = openstack_networking_floatingip_v2.fip_guest1.address
+output "client1_ip" {
+  value = openstack_networking_floatingip_v2.fip_client1.address
 }
 
-output "guest2_ip" {
-  value = openstack_networking_floatingip_v2.fip_guest2.address
+output "client2_ip" {
+  value = openstack_networking_floatingip_v2.fip_client2.address
 }
 
 output "host_fixed_ip" {

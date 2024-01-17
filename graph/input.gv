@@ -44,7 +44,7 @@ digraph MyGraph {
     </TABLE>
   >];
 
-  Telegraf_guest1 [shape=none, label=<
+  Telegraf_client1 [shape=none, label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
       <TR>
         <TD><IMG SRC="icons/telegraf.png" SCALE="TRUE"/></TD>
@@ -55,7 +55,7 @@ digraph MyGraph {
     </TABLE>
   >];
 
-  Telegraf_guest2 [shape=none, label=<
+  Telegraf_client2 [shape=none, label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
       <TR>
         <TD><IMG SRC="icons/telegraf.png" SCALE="TRUE"/></TD>
@@ -68,21 +68,21 @@ digraph MyGraph {
 
   subgraph cluster_host {
     label="host"
-    
+
     Browser -> Grafana [label="shows \ndash-\n boards \nfrom"]
     Grafana -> InfluxDB [label="reads \n data \n from"]
     Telegraf_host -> InfluxDB [xlabel="writes\n data\n to"]
   }
-  
-  subgraph cluster_guest1 { 
-    label="guest1"
 
-    Telegraf_guest1 -> InfluxDB [label="sends \ndata to"]
+  subgraph cluster_client1 {
+    label="client1"
+
+    Telegraf_client1 -> InfluxDB [label="sends \ndata to"]
   }
-  
-  subgraph cluster_guest2 { 
-    label="guest2"
 
-    Telegraf_guest2 -> InfluxDB [label="sends \ndata to"]
+  subgraph cluster_client2 {
+    label="client2"
+
+    Telegraf_client2 -> InfluxDB [label="sends \ndata to"]
   }
 }

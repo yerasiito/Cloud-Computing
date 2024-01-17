@@ -1,25 +1,28 @@
 - name: Install needed packages
   hosts: host
   become: true
+  vars:
+    packages_dir: "packages_playbooks"
+
   tasks:
     - name: Update apt repositories
       ansible.builtin.apt:
         update_cache: true
 # Install nginx
     - name: Install nginx
-      ansible.builtin.import_tasks: nginx.yaml
+      ansible.builtin.import_tasks: "{{ packages_dir }}/nginx.yaml"
 
 # Install and Configure telegraf
     - name: Install and configure telegraf
-      ansible.builtin.import_tasks: telegraf.yaml
+      ansible.builtin.import_tasks: "{{ packages_dir }}/telegraf.yaml"
 
 # Install and Configure influxdb
     - name: Install and configure influxdb
-      ansible.builtin.import_tasks: influxdb.yaml
+      ansible.builtin.import_tasks: "{{ packages_dir }}/influxdb.yaml"
 
 # Install and Configure grafana
     - name: Install and configure grafana
-      ansible.builtin.import_tasks: grafana.yaml
+      ansible.builtin.import_tasks: "{{ packages_dir }}/grafana.yaml"
 
 # Start services
     - name: Start and enable Telegraf service

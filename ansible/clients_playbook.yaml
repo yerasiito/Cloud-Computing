@@ -1,13 +1,16 @@
 - name: Install needed packages
-  hosts: guests
+  hosts: clients
   become: true
+  vars:
+    packages_dir: "packages_playbooks"
+
   tasks:
     - name: Update apt repositories
       ansible.builtin.apt:
         update_cache: true
 # Install and Configure telegraf
     - name: Install and configure telegraf
-      ansible.builtin.import_tasks: telegraf.yaml
+      ansible.builtin.import_tasks: "{{ packages_dir }}/telegraf.yaml"
 
 # Start services
     - name: Start and enable Telegraf service
