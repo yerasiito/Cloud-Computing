@@ -54,8 +54,8 @@ ansible:
     - cd ${CI_PROJECT_DIR}/ansible
     - echo "$SSH_PRIVATE_KEY" > ssh_key_file
     - chmod 600 ssh_key_file
-    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml host.yaml --key-file ssh_key_file
-    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml guests.yaml --key-file ssh_key_file
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml host_playbook.yaml --key-file ssh_key_file
+    - ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.yaml clients_playbook.yaml --key-file ssh_key_file
   allow_failure: true
   when: manual
 
