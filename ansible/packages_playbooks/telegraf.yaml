@@ -17,6 +17,52 @@
     regexp: '.*(\[\[outputs\.influxdb\]\])'
     replace: '\1'
 
+- name: Uncomment net plugin
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '.*(\[\[inputs\.netstat\]\])'
+    replace: '\1'
+
+- name: Uncomment interfaces
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    after: '\[\[inputs\.net\]\]'
+    regexp: '.*(interfaces = .*)'
+    replace: '\1'
+
+- name: Uncomment netstat plugin
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '.*(\[\[inputs\.net\]\])'
+    replace: '\1'
+
+- name: Uncomment file descriptor plugin
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '.*(\[\[inputs\.linux_sysctl_fs\]\])'
+    replace: '\1'
+
+- name: Uncomment procstat plugin
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: '.*(\[\[inputs\.procstat\]\])'
+    replace: '\1'
+
+- name: Uncomment pattern procstat
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    after: '\[\[inputs\.net\]\]'
+    before: '\[\[inputs\.proxmox\]\]'
+    regexp: '.*(pattern =).*'
+    replace: '\1 "httpd|ansible|telegraf|nginx"'
+
+- name: Uncomment user procstat
+  ansible.builtin.replace:
+    path: /etc/telegraf/telegraf.conf
+    after: '\[\[inputs\.net\]\]'
+    regexp: '.*(user =).*'
+    replace: '\1 "daemon|root|telegraf"'
+
 - name: Uncomment local url
   ansible.builtin.replace:
     path: /etc/telegraf/telegraf.conf

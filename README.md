@@ -67,10 +67,10 @@ Run ansible to install and configure the needed monitoring packages:
 ```
 (cd ansible &&
 # Configure host machine
-ansible-playbook -i inventory.yaml host.yaml --key-file "~/.ssh/gitlab_ci_cd"
+ansible-playbook -i inventory.yaml host_playbook.yaml --key-file "~/.ssh/gitlab_ci_cd"
 
 # Configure guest machine
-ansible-playbook -i inventory.yaml guests.yaml --key-file "~/.ssh/gitlab_ci_cd")
+ansible-playbook -i inventory.yaml clients_playbook.yaml --key-file "~/.ssh/gitlab_ci_cd")
 ```
 
 ### 6. Step: Open grafana in your browser
@@ -81,13 +81,8 @@ Enter with:\
 Username: admin\
 Password: admin
 
-### 6. Step: Import desired dashboard
-"Dashboard" > "New" > "Import" > Write "1138" and load > select influxDB and import
-
-Now you can monitor your host:
-![](host.png)
-And your guest machine:
-![](guest1.png)
+Click the toggle menu and select "Dashboards". Now you can select the dashboard you want in order to monitor the servers:
+![](monitoring.png)
 
 ### 7. Step
 To destroy the infrastructure execute:

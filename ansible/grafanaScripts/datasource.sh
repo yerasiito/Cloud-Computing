@@ -34,9 +34,4 @@ curl -X POST \
   -u "${GRAFANA_USER}:${GRAFANA_PASSWORD}" \
   "${GRAFANA_URL}/api/datasources"
 
-# Check the HTTP response code
-if [ "$(echo "$response" | tail -n1)" == "200" ]; then
-  echo "Datasource added successfully."
-else
-  echo "Error adding datasource. HTTP response code: $(echo "$response" | tail -n1)"
-fi
+echo $response

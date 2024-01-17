@@ -26,10 +26,17 @@
     create: yes
 # export PATH=$PATH:/usr/share/grafana/bin
 
-- name: Copy shell config script to remote instance
+- name: Copy datasource.sh to remote server
   copy:
-    src: config_grafana.sh  # Specify the path to your local shell script
-    dest: /tmp  # Specify the destination path on the remote server
+    src: ../grafanaScripts/datasource.sh  
+    dest: /tmp  
+- name: Make datasource.sh executable
+  command: chmod +x /tmp/datasource.sh
 
-- name: Make the config script executable
-  command: chmod +x /tmp/config_grafana.sh
+- name: Copy import.sh to remote server
+  copy:
+    src: ../grafanaScripts/import.sh  
+    dest: /tmp
+
+- name: Make import.sh executable
+  command: chmod +x /tmp/import.sh

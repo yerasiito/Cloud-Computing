@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Ejemplo Dashboard",
+    "panels": [
+      {
+        "id": 1,
+        "type": "graph",
+        "title": "Ejemplo Panel",
+        "datasource": "$DS_INFLUXDB",
+        "targets": [
+          {
+            "measurement": "medida_ejemplo",
+            "field": "valor",
+            "groupBy": [
+              {
+                "type": "time",
+                "params": ["auto"]
+              },
+              {
+                "type": "tag",
+                "params": ["tag_ejemplo"]
+              }
+            ],
+            "alias": "Valor Promedio",
+            "type": "timeseries"
+          }
+        ],
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "refresh": "5s"
+  },
+  "overwrite": false
+}
+

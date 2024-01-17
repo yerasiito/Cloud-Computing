@@ -8,6 +8,14 @@
     - name: Update apt repositories
       ansible.builtin.apt:
         update_cache: true
+
+    - name: Install dependency jq # needed for execute import script
+      ansible.builtin.apt:
+        name:
+        - jq
+        state: present
+        # sudo apt-get install -y jq
+
 # Install nginx
     - name: Install nginx
       ansible.builtin.import_tasks: "{{ packages_dir }}/nginx.yaml"
@@ -42,11 +50,20 @@
     - name: Sleep command to wait grafana to start
       command: sleep 10  # Adjust the time
 
-    - name: Execute the config shell script
-      shell: /tmp/config_grafana.sh
-      register: script_output
-    # ./config_grafana.sh
+    - name: Execute the datasource shell script
+      shell: /tmp/datasource.sh
+      register: datasource_script_output
+   #  ./datasource.sh
 
-    - name: Display the grafana config output
+    - name: Display the grafana datasource script output
       ansible.builtin.debug:
-        var: script_output.stdout_lines
+        var: datasource_script_output.stdout_lines
+
+    - name: Execute the import shell script
+      shell: /tmp/import.sh
+      register: import_script_output
+   #  ./datasource.sh
+
+    - name: Display the grafana import script output
+      ansible.builtin.debug:
+        var: import_script_output.stdout_lines
